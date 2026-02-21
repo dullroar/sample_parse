@@ -1,0 +1,11 @@
+{
+    "python.linting.pylintArgs": [
+        "--disable=C0303,C0304"
+    ],
+    "python.linting.pylintEnabled": true,
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.formatOnSave": true
+    }
+}
