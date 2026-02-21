@@ -7,7 +7,7 @@ for how the parser handles different input types.
     python examples.py
 """
 
-from sample import parse_string_to_typed
+from sample_parse import parse_string_to_typed
 
 
 def print_example(input_val, description=""):

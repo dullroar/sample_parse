@@ -50,8 +50,8 @@ It's a **reference architecture**, not a tutorial project. Every structural deci
 ### Top-Level Directory Layout
 
 ```
-sample/
-├── sample/                    # The actual package (importable)
+sample-parse/
+├── sample_parse/                  # The actual package (importable)
 ├── tests/                     # Test code (separate from package)
 ├── .vscode/                   # IDE configuration (team consistency)
 ├── .pylintrc                  # Linter configuration
@@ -66,15 +66,15 @@ sample/
 
 Many Python projects use:
 ```
-sample/
+sample-parse/
 ├── src/
-│   └── sample/
+│   └── sample_parse/
 ├── tests/
 ```
 
 **This project doesn't.** Why?
 
-1. **Simpler imports during development**: Direct `import sample` works without path manipulation
+1. **Simpler imports during development**: Direct `import sample_parse` works without path manipulation
 2. **Fewer layers of indirection**: Engineers are practical about complexity budgets
 3. **Standard for small-to-medium projects**: The `src/` layout shines primarily for *massive* monorepos (like Django itself)
 4. **Practice in this context**: For this learning project, the overhead isn't worth the benefit
@@ -83,10 +83,10 @@ sample/
 
 **Reference**: https://packaging.python.org/tutorials/packaging-projects/
 
-### Inside `sample/` (The Package)
+### Inside `sample_parse/` (The Package)
 
 ```python
-sample/
+sample_parse/
 ├── __init__.py              # Makes it a package, exports public API
 ├── common.py                # Core logic
 └── cli.py                   # Click CLI interface
@@ -99,7 +99,7 @@ Modern Python practice suggests:
 - **Internal modules** (like `common.py`, `cli.py`) for different concerns
 - **Flat structure** for small packages (deep hierarchies harm readability)
 
-**sample/__init__.py**:
+**sample_parse/__init__.py**:
 ```python
 """sample: A utility for parsing strings to their intended Python types."""
 
@@ -117,7 +117,7 @@ This serves multiple purposes:
 
 Why not expose CLI code? Because:
 - CLI is an *interface*, not a feature library
-- Users importing `sample` want `parse_string_to_typed()`, not CLI machinery
+- Users importing `sample_parse` want `parse_string_to_typed()`, not CLI machinery
 - Separation of concerns: library logic ≠ shell interface
 
 ### Inside `tests/`
@@ -129,7 +129,7 @@ tests/
 └── test_common.py           # All tests for the application
 ```
 
-#### Why Not `test_sample.py`?
+#### Why Not `test_sample_parse.py`?
 
 The module is named `test_common.py` because it tests `common.py`. If the project grew:
 
@@ -158,7 +158,7 @@ Python convention places **unit tests separately**:
 
 ```
 python/
-├── sample/                  # Importable package
+├── sample_parse/                  # Importable package
 │   └── __init__.py
 ├── tests/                   # NOT importable; pytest finds it
 │   └── test_*.py
@@ -482,7 +482,7 @@ Black has **zero configuration** (except line length). This is intentional: the 
 
 **Integration**: In modern workflows:
 ```bash
-black sample/ tests/ examples.py    # Format in place
+black sample_parse/ tests/ examples.py    # Format in place
 ```
 
 Or integrated into editor (VS Code via Pylance/Python extension).
@@ -586,7 +586,7 @@ pip install -e .
 
 This installs the package in **editable mode**:
 - Code changes are immediately reflected
-- You can `import sample` as if it's installed
+- You can `import sample_parse` as if it's installed
 - Great for development
 
 #### Option 2: PyPI Distribution (Production)
@@ -635,7 +635,7 @@ Best practice: automate version extraction during build (e.g., setuptools_scm), 
 ```bash
 # Clone project
 git clone <repo>
-cd sample
+cd sample-parse
 
 # Create virtual environment
 python -m venv venv
@@ -646,9 +646,9 @@ pip install -e ".[dev]"
 
 # Now you can:
 pytest tests/ -v              # Run tests
-black sample/ tests/          # Auto-format
-pylint sample/ tests/         # Lint
-mypy sample/                  # Type-check
+black sample_parse/ tests/          # Auto-format
+pylint sample_parse/ tests/         # Lint
+mypy sample_parse/                  # Type-check
 python examples.py            # See examples
 ```
 
@@ -708,11 +708,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
-      - run: black --check sample/ tests/
-      - run: isort --check-only sample/ tests/
-      - run: pylint sample/ tests/
-      - run: mypy sample/
-      - run: pytest tests/ --cov=sample
+      - run: black --check sample_parse/ tests/
+      - run: isort --check-only sample_parse/ tests/
+      - run: pylint sample_parse/ tests/
+      - run: mypy sample_parse/
+      - run: pytest tests/ --cov=sample_parse
 ```
 
 This project doesn't use GitHub Actions (to keep scope small), but professional projects do. This ensures:
@@ -770,7 +770,7 @@ Comments disappear. Docstrings persist.
 
 A project with 200 lines can exist in a single file. But this project has:
 ```
-sample/
+sample_parse/
 ├── __init__.py     (public API)
 ├── common.py       (parsing logic)
 └── cli.py          (command-line interface)
@@ -791,12 +791,12 @@ Modern Python prefers **configuration in `pyproject.toml`** over implicit behavi
 
 ```toml
 [project.scripts]
-sample = "sample.cli:cli"
+sample = "sample_parse.cli:cli"
 ```
 
 This line:
 - Installs a `sample` command-line tool
-- Points to `sample.cli` module, `cli` function
+- Points to `sample_parse.cli` module, `cli` function
 - Is discoverable by reading `pyproject.toml`
 
 Without explicit configuration, users would need to do:

@@ -16,7 +16,7 @@ A simple, elegant utility for parsing strings to their intended Python types. It
 
 ### From source
 ```bash
-cd sample
+cd sample-parse
 pip install -e .
 ```
 
@@ -38,7 +38,7 @@ This runs interactive examples showing the parser handling JSON, numbers, regex,
 ### Use as a library
 
 ```python
-from sample import parse_string_to_typed
+from sample_parse import parse_string_to_typed
 
 # Parse JSON
 result = parse_string_to_typed('{"key": "value"}')

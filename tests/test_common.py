@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from sample import parse_string_to_typed
+from sample_parse import parse_string_to_typed
 
 
 # Test cases as a list of tuples: (input, expected_output)

@@ -47,7 +47,7 @@ dev = [
 ]
 
 [project.scripts]
-sample = "sample.cli:cli"
+sample = "sample_parse.cli:cli"
 
 [project.urls]
 Homepage = "https://github.com/yourusername/sample-parse"
