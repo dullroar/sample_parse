@@ -1,5 +1,7 @@
 # sample-parse
 
+For the type-coercion policy and ambiguity boundaries, see [DESIGN.md](DESIGN.md).
+
 A simple, elegant utility for parsing strings to their intended Python types. It intelligently detects and converts strings to JSON objects, Python literals, regex patterns, floats, integers, or falls back to plain strings.
 
 ## Features
@@ -101,14 +103,9 @@ sample parse '{"key": "value"}' --json
 
 ## Parsing Strategy
 
-The function attempts type coercion in this order:
-
-1. **JSON** - Strict JSON objects, arrays, and primitives
-2. **Pythonic Literals** - Tuples, sets, Python-specific keywords (True, False, None)
-3. **Regex Patterns** - Strings wrapped in `/pattern/` or containing regex metacharacters
-4. **Float** - Decimal numbers like `3.14`, `1e10`, etc.
-5. **Integer** - Whole numbers in decimal, hex (`0xFF`), octal (`0o77`), or binary (`0b101`)
-6. **String** - If none of the above match, returns the original string
+Coercion follows a deliberate order to resolve ambiguous strings predictably.
+See [DESIGN.md](DESIGN.md) for that policy, its safety boundary, and the regex
+heuristic.
 
 ## Testing
 
