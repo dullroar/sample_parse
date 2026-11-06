@@ -1,6 +1,6 @@
 # sample-parse
 
-For the type-coercion policy and ambiguity boundaries, see [DESIGN.md](DESIGN.md).
+For the type-coercion policy and ambiguity boundaries, see [docs/design/](docs/design/README.md).
 
 A simple, elegant utility for parsing strings to their intended Python types. It intelligently detects and converts strings to JSON objects, Python literals, regex patterns, floats, integers, or falls back to plain strings.
 
@@ -104,7 +104,7 @@ sample parse '{"key": "value"}' --json
 ## Parsing Strategy
 
 Coercion follows a deliberate order to resolve ambiguous strings predictably.
-See [DESIGN.md](DESIGN.md) for that policy, its safety boundary, and the regex
+See [docs/design/](docs/design/README.md) for that policy, its safety boundary, and the regex
 heuristic.
 
 ## Testing
