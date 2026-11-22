@@ -1,6 +1,6 @@
 ---
 id: 02-build-and-test
-status: pending
+status: done
 depends_on: [01-adopt-context]
 touches:
   - Dockerfile
@@ -13,7 +13,7 @@ touches:
 lane: none
 requirements: [R2]
 gate: bash scripts/test_docker.sh && python3 scripts/check_context.py && git diff --check
-evidence: ""
+evidence: "Gate passed 2026-11-22 UTC. Docker passed 89 tests and all context checks. Host context and diff checks passed."
 ---
 
 # 02-build-and-test
@@ -27,3 +27,12 @@ Touches `Dockerfile`, `.dockerignore`, `README.md`, `scripts/test_docker.sh`, ge
 ## Repository gate
 
 Install the existing `.[dev]` extra and run `python -m pytest tests/` in Docker. Preserve `LEARNTHIS.md`, packaging, and the example entry point. Keep Docker-only adjustments to test and packaging support.
+
+## Verification
+
+- The gate built and ran the image from the linked worktree. All 89 tests
+  passed on Python 3.12.3. The container and host context checks passed.
+- `bash -n scripts/test_docker.sh`, `python3 scripts/check_links.py --all`,
+  and the staged diff check passed.
+- The image build corrects the old package name in an install copy of
+  `pyproject.toml`. This correction applies only to the Docker test build.
