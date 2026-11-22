@@ -109,6 +109,40 @@ heuristic.
 
 ## Testing
 
+### Docker
+
+From the repository root, run the same build and test command as CI:
+
+```bash
+bash scripts/test_docker.sh
+```
+
+Use Bash, Git, GNU tar, and Docker with a Linux engine. The build can access
+package registries. The tests run as a normal user with the network disabled.
+They use a temporary directory in the container and need no devices or
+credentials. The script copies tracked files from the current worktree,
+including local edits. Stage new source files so the script includes them.
+
+To build an image from the current commit and keep it for later use, run:
+
+```bash
+image="sample-parse:manual-$(date +%s)-$$"
+git archive HEAD | docker build --tag "$image" -
+docker run --rm --name "sample-parse-${image#*:}" --network none --read-only \
+    --tmpfs /tmp:rw,nosuid,nodev "$image"
+```
+
+To run the migration plan from the base checkout, install `ralph-looper` and
+put it on `PATH`. From the repository root, run:
+
+```bash
+ralph-looper --repo . --plan ralphify --agent codex
+```
+
+Find the Ralph runner guide in the [docs index](docs/README.md).
+
+### Host tests
+
 The project uses **pytest** for modern, idiomatic Python testing with parametrized test cases.
 
 ### Quick start
