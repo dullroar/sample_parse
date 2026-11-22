@@ -1,25 +1,30 @@
-"""Shared helpers for the context-governance scripts (standard library only)."""
+"""Shared helpers for the repo scripts (standard library only).
+
+Run me when: never directly. Other scripts in this folder import it.
+"""
 from __future__ import annotations
 
 import re
 import subprocess
 from pathlib import Path
 
-BEGIN = "<!-- BEGIN GENERATED CONTEXT INDEX -->"
-END = "<!-- END GENERATED CONTEXT INDEX -->"
+BEGIN = "<!-- BEGIN GENERATED INDEX -->"
+END = "<!-- END GENERATED INDEX -->"
 SKIP_DIRS = {".git", ".venv", "node_modules", "build", "dist", "__pycache__", ".hypothesis"}
 
 
 def repo_root(start: Path | None = None) -> Path:
     here = (start or Path.cwd()).resolve()
     for candidate in [here, *here.parents]:
-        if (candidate / ".git").exists():
+        if (candidate / ".git").exists() or (candidate / "scripts/check_context.py").is_file():
             return candidate
     return here
 
 
 def markdown_files(root: Path) -> list[Path]:
     """Tracked and untracked-but-not-ignored Markdown files, falling back to a walk."""
+    if not (root / ".git").exists():
+        return walk_markdown(root)
     try:
         out = subprocess.run(
             ["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.md"],
@@ -27,8 +32,15 @@ def markdown_files(root: Path) -> list[Path]:
         ).stdout.split("\n")
         files = [root / line for line in out if line and not SKIP_DIRS & set(Path(line).parts)]
     except (OSError, subprocess.CalledProcessError):
-        files = [p for p in root.rglob("*.md") if not SKIP_DIRS & set(p.relative_to(root).parts)]
+        return walk_markdown(root)
     return sorted(p for p in files if p.is_file())
+
+
+def walk_markdown(root: Path) -> list[Path]:
+    return sorted(
+        path for path in root.rglob("*.md")
+        if path.is_file() and not SKIP_DIRS & set(path.relative_to(root).parts)
+    )
 
 
 def split_frontmatter(text: str) -> tuple[dict[str, object], str]:
