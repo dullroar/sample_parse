@@ -1,42 +1,45 @@
 # Agent contract
 
-A small utility (library plus Click CLI) that coerces a string into the most plausible Python value; the ordered policy lives in sample_parse/common.py.
+sample_parse is a Python library and Click CLI. It converts a string to the most plausible Python value. The order of the conversions is in `sample_parse/common.py`.
+
+## Standing rules
+
+- Before changing this repository's structure, read [repo-template](https://github.com/dullroar/repo-template) and [ralph-looper](https://github.com/dullroar/ralph-looper). Account for their layout, plan format, generated indexes, worktree rules, and validation commands in the change.
+- Start work on a branch. Use a separate Git worktree for each plan and for steps that run at the same time. Keep `master` available for review.
+- Use placeholders and aggregate evidence. Keep secrets, credentials, personal data, personal paths, private host names, and sensitive record-level examples out of tracked files. Keep logs and other run output outside the repository.
+- Write in Simplified Technical English. Use short sentences, active voice, and consistent terms.
+- Get authorization before you push, publish, force-push, or add a remote.
+
+User instructions come first. When sources conflict, use this order after user instructions: this file, `docs/design/`, the named plan, other docs and references, `memory/`, code and tests, historical notes.
 
 ## Load context in this order
 
-1. Read this file.
-2. Read the short indexes in full: `README.md`, `docs/README.md`, `memory/README.md`, `scripts/README.md`.
-3. Match the task against each index's **Read when** entries and open only matching documents.
-4. For a large file, search its headings and read only the relevant ranges.
-5. Stop loading when the decision, intended files, constraints and validation method are known.
-
-User instructions take precedence over repository guidance. When sources conflict, prefer: user
-instruction, this file, `docs/design/`, the named plan, domain documentation and references,
-`memory/`, implementation and tests, historical notes.
+1. Read this file and [README.md](./README.md).
+2. Read the [docs index](./docs/README.md), [memory index](./memory/AGENTS.md), [plans index](./plans/AGENTS.md), and [scripts index](./scripts/AGENTS.md).
+3. Open only the documents or scripts whose routing entries match the task. For a large file, search its headings and read the relevant sections.
+4. Stop when you know the decision, the files, the limits, and how to verify the work.
 
 ## Context ownership
 
-- Universal rules belong here.
-- Architectural reasons belong in `docs/design/` (one premise per file).
-- Non-obvious findings that cost time to discover belong in `memory/` (one topic per file; edit the existing topic, do not append a rival).
-- Execution state belongs in `plans/`; deterministic automation in `scripts/`.
-- Every routed Markdown file starts with `gist: "Read when: ..."` front matter. Do not hand-edit the generated section of an index; run `python scripts/build_context_indexes.py`.
+| Path | What belongs here |
+| --- | --- |
+| `AGENTS.md` | Rules that apply to the entire repository. |
+| `docs/design/` | Design reasons, with one premise in each file. |
+| `memory/` | Findings that cost time to discover, with one topic in each file. Edit the existing topic when it changes. |
+| `plans/` | Requirements, steps, and execution state. |
+| `scripts/` | Deterministic automation. |
 
-Do not duplicate a fact across layers. Correct its canonical source.
+Keep each fact in its source file. Start each routed Markdown file with `gist: "Read when: ..."` or `gist: "Read me when: ..."` in its front matter. Edit the docs index by hand. Run `python3 scripts/build_indexes.py` to update generated index blocks.
 
-## Planned work (spec-driven)
+## Planned work
 
-- Work only on a named plan in `plans/<plan>/` (`spec.md` plus `steps/`) or an explicitly identified off-plan task. Copy `plans/TEMPLATE/` to start one.
-- Once its spec is approved, proceed through the steps without asking permission for routine work. Failed tests and dead ends inside scope: diagnose, repair, continue. Return to the user only for a new decision: contradictory requirements, scope expansion, or an action outside the spec's delegated authority.
-- Acceptance checks named in the spec are protected. Never weaken, skip or delete one to get green; if one cannot pass as written, escalate.
-- Parallel steps must have no dependency between them and no overlapping `touches`; if independence is uncertain, serialize. After parallel steps merge, run the spec's combined validation.
-- A step is done only with recorded evidence. Report unavailable verification honestly.
-- Retiring a rule, correcting documentation, and tolerating a known violation are different outcomes; record which one (see `plans/TEMPLATE/spec.md`).
+- Work on a named plan in `plans/<plan>/` or on an explicitly identified off-plan task. Copy [plans/for-each-plan/](./plans/for-each-plan/) to start a plan.
+- After the spec is approved, carry out the steps. Diagnose test failures within scope and continue. Return to the user for a decision when requirements conflict, scope must expand, or an action exceeds the authority in the spec.
+- Preserve every acceptance check named in the spec. If a protected check cannot pass as written, escalate.
+- Run steps at the same time only when they are independent and their `touches` do not overlap. If independence is uncertain, run them in order. Run the spec's combined validation after the steps merge.
+- Record the evidence in the step file before you mark it done. Report unavailable verification. Record what remains in Resume notes if you stop before completion.
+- Record whether a change retires a rule, corrects documentation, or accepts a known violation. See the [spec template](./plans/for-each-plan/spec.md).
 
 ## Validation
 
-Run the smallest check that proves the change, then `python scripts/check_context.py` for any change to context files.
-
-## Safety
-
-Do not commit credentials, personal data, personal filesystem paths or sensitive record-level examples. Use placeholders and aggregate evidence. Do not push, publish, force-push or add a remote without authorization.
+Run the smallest check that proves the change. For changes to context files, run `python3 scripts/check_context.py`.
