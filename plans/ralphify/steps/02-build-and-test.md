@@ -13,7 +13,9 @@ touches:
 lane: none
 requirements: [R2]
 gate: bash scripts/test_docker.sh && python3 scripts/check_context.py && git diff --check
-evidence: "Gate passed 2026-11-22 UTC. Docker passed 89 tests and all context checks. Host context and diff checks passed."
+evidence: gate passed 2026-11-22 (driver-verified)
+claimed_by: codex cli-default
+claimed_at: "2026-11-22T22:06:23Z"
 ---
 
 # 02-build-and-test
