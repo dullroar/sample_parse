@@ -1,13 +1,15 @@
 ---
 id: 03-verify-integration
-status: pending
+status: done
 depends_on: [02-build-and-test]
 touches:
   - plans/ralphify/steps/03-verify-integration.md
 lane: none
 requirements: [R3]
 gate: python3 scripts/check_context.py && bash scripts/test_docker.sh && git diff --check
-evidence: ""
+evidence: gate passed 2026-11-22 (driver-verified)
+claimed_by: codex cli-default
+claimed_at: "2026-11-22T22:08:38Z"
 ---
 
 # 03-verify-integration
@@ -24,10 +26,42 @@ Run `git merge-base HEAD plan/ralphify` to identify the integrated base commit. 
 
 ## Results
 
-- Base commit: PENDING
-- Commands: PENDING
-- Docker build: PENDING
-- Tests: PENDING
-- Skips: PENDING
-- FUSE: PENDING
-- UTC date: PENDING
+- Base commit: `f22f44b04a7c63b370b8b2cf8b40cd583b3b6cc8` from
+  `git merge-base HEAD plan/ralphify`.
+- Commands: PASS. `python3 scripts/check_context.py && bash scripts/test_docker.sh && git diff --check`.
+  The host and container context checks passed. The Docker socket required
+  execution outside the sandbox.
+- Docker build: PASS. The gate built
+  `sample-parse:sample-parse-docker-uqjmx2ny` from the integrated worktree.
+  The README build from `git archive HEAD` and the documented Docker run also
+  passed with `sample-parse:manual-1795385266-40524`.
+- Tests: PASS. The gate and README Docker run each passed all 89 tests on
+  Python 3.12.3. The image installed the `dev` extra. From `/tmp` in the
+  image, the installed CLI returned `int: 123`, JSON `123`, `float: 3.14`,
+  and `Pattern: /[a-z]+/` for the README inputs. Batch JSON returned the
+  values `123` and `3.14` in order. The installed library parsed `[1, 2]`
+  as a list. `python examples.py` produced output on the host and in the
+  image. The image included `LEARNTHIS.md`.
+- Skips: PASS. Zero tests skipped. This repository has no required opt-in
+  tests.
+- FUSE: n/a.
+- UTC date: 2026-11-22.
+
+## README and repository checks
+
+- PASS. Both upstream links in `AGENTS.md` resolve. The structural-change
+  rule requires both references and covers layout, plan format, generated
+  indexes, worktree rules, and validation commands. The pinned runner
+  guide in the docs index resolves.
+- PASS. The local runner help and argument parser accept
+  `ralph-looper --repo . --plan ralphify --agent codex`. This verification
+  checked the command syntax. The parent driver owns execution of the plan.
+- PASS. `git diff --exit-code 125f194 HEAD -- LEARNTHIS.md pyproject.toml examples.py sample_parse tests`
+  confirmed that the migration preserved these files.
+- Known host installation issue. In a temporary archive, the README's
+  editable install targets `.` and `.[dev]` both failed with
+  `error: package directory './sample' does not exist`. The check used
+  `pip install --no-index --no-build-isolation --no-deps -e` with each
+  target. The existing package table names `sample`. The Docker build
+  corrects the name in its temporary install copy. A host packaging fix
+  requires a separate change.
