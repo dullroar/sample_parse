@@ -1,6 +1,6 @@
 ---
 id: a03-probes
-status: pending
+status: done
 depends_on: [a02-apply]
 touches:
   - docs/controls-adoption.md
@@ -10,7 +10,7 @@ gate: python3 scripts/check_context.py && python3 scripts/build_indexes.py --che
 requirements: [R3]
 claimed_by: ""
 claimed_at: ""
-evidence: ""
+evidence: "2026-11-24 UTC. Six probes failed with the expected rule IDs (exit 1; the unreadable-file probe exit 3). Restored copy exit 0. Shim exit 1 on the bad plan step. Rollback: old scripts at the base commit and the shim at HEAD both pass. Receipt recorded. Gate parts run in the session: check_context.py, build_indexes.py --check, secret_guard.py --tracked, all pass. The heading, rule ID and pin greps and git diff --check also pass."
 ---
 
 # Prove the controls with known-bad probes, test the rollback and write the receipt
