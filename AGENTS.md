@@ -9,6 +9,7 @@ sample_parse is a Python library and Click CLI. It converts a string to the most
 - Use placeholders and aggregate evidence. Keep secrets, credentials, personal data, personal paths, private host names, and sensitive record-level examples out of tracked files. Keep logs and other run output outside the repository.
 - Write in Simplified Technical English. Use short sentences, active voice, and consistent terms.
 - Get authorization before you push, publish, force-push, or add a remote.
+- Do not weaken the controls. You may run the local checks at any time. CI runs them in all cases. Do not change or disable the controls, the pin (`scripts/controls-requirements.txt`), `controls.toml` or the workflows to make an unrelated task pass. The driver checks the gate and `touches` of each step. A change to the gate or a file outside `touches` fails the step. Send each piece of work to the cheapest executor that can do it, and let the gate decide if the work is done. The full policy is at https://github.com/dullroar/ralph-looper/blob/main/docs/routing.md.
 
 User instructions come first. When sources conflict, use this order after user instructions: this file, `docs/design/`, the named plan, other docs and references, `memory/`, code and tests, historical notes.
 

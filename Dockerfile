@@ -1,7 +1,7 @@
 FROM ubuntu:24.04
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates python3-venv \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates git python3-venv \
     && rm -rf /var/lib/apt/lists/* \
     && python3 -m venv /opt/venv \
     && useradd --create-home tester
@@ -19,6 +19,8 @@ RUN sed -i 's/^packages = \["sample"\]$/packages = ["sample_parse"]/' /tmp/sampl
 WORKDIR /work
 COPY . .
 USER tester
+# The run has no network and a read-only file system. Build the shim cache now, as user tester.
+RUN python -c "import sys; sys.path.insert(0, 'scripts'); import check_context as c; spec, commit = c.pinned(); c.ensure_environment(spec, commit)"
 CMD ["sh", "-eu", "-c", "output=$(mktemp -d /tmp/sample-parse.XXXXXXXX); \
     trap 'rm -rf \"$output\"' EXIT; \
     python -m pytest tests/ --basetemp=\"$output/tests\" -o cache_dir=\"$output/cache\"; \

@@ -60,4 +60,4 @@ If you cannot finish, write "Resume notes" below. Keep the status `in_progress`.
 
 ## Resume notes
 
-(none)
+All parts of the gate pass except `bash scripts/test_docker.sh`. This session cannot run Docker. The driver must run it. The Dockerfile now installs `git` and builds the shim cache as user `tester`. The Docker build is untested. If it fails, check the cache build line first.
